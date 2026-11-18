@@ -1,0 +1,38 @@
+Token de carlos_mora obtenido: eyJhbGciOiJIUzI1NiJ9...
+
+=== Paso 1: intento IDOR bloqueado (carlos_mora -> cuenta 3 de maria_rojas) ===
+HTTP/1.1 403 
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/problem+json
+Transfer-Encoding: chunked
+Date: Wed, 18 Nov 2026 19:47:44 GMT
+
+{"type":"https://insecurepay.cr/errors/403","title":"Acceso no autorizado a recurso ajeno","status":403,"detail":"No tiene permisos para consultar la cuenta solicitada.","instance":"/api/cuentas/3/saldo","timestamp":"2026-11-18T19:47:45.383684654Z"}
+
+=== Paso 2: consulta legitima (carlos_mora -> su cuenta, ID 2 en data.sql) ===
+HTTP/1.1 200 
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Wed, 18 Nov 2026 19:47:44 GMT
+
+{"cuentaId":2,"numeroCuenta":"CR05015202001026458901","titular":"Carlos Mora Morales","saldo":250000.00,"moneda":"CRC"}
+
+=== Extra: cuenta 1 (admin) solicitada por carlos_mora ===
+HTTP 403
+=== Extra: GET /api/cuentas/3 (detalle) por carlos_mora ===
+HTTP 403
+=== Extra: sin cabecera Authorization ===
+HTTP 401
+=== Extra: token manipulado ===
+HTTP 401
+=== Extra: cuenta inexistente ===
+HTTP 404
+=== Extra: rol ADMIN consulta cuenta 3 ===
+HTTP 200
+
+RESULTADO: todas las verificaciones pasaron
